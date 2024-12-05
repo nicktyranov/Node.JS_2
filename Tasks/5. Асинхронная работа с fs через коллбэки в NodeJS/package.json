@@ -1,5 +1,5 @@
 {
-  "name": "task3",
+  "name": "task-5",
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
@@ -8,9 +8,5 @@
   },
   "author": "",
   "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "@types/lodash": "^4.17.13",
-    "lodash": "^4.17.21"
-  }
+  "description": ""
 }
