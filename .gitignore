@@ -3,6 +3,8 @@
 **/.DS_Store
 .DS_Store
 
+**/50mb_file.txt
+
 /weather-cli
 
 
