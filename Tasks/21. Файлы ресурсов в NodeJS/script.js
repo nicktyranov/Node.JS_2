@@ -1,0 +1,1 @@
+console.log('sctipt.js – HI');
