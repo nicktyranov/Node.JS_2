@@ -10,22 +10,18 @@ http.createServer(async (request, response) => {
 
 	let lpath = './src/layout.html';
 	let tpath = './src/pages/title.html'; 
+	let contentPath = '';
 
 	let mimeType = 'text/html';
 
 	let statusCode;
-	let data;
 	let layout = '';
 	let content = '';
 	let title = '';
+	// let css = '';
 
 	let filePath = path.join(rootDir, request.url);
 	console.log('Request path:', filePath);
-	if (request.url !== '/') {
-		if (!path.extname(filePath)) {
-			filePath += '.html';
-		}
-	}
 	
 	const ext = path.extname(filePath).slice(1); // Получаем расширение файла
 	mimeType = getMimeType(ext);
@@ -45,30 +41,34 @@ http.createServer(async (request, response) => {
 	}
 
 	try {
-		let stats =  await fs.promises.stat(filePath);
-		
-		if (stats.isDirectory()) {
-			filePath = path.join(filePath, 'index.html');
-		}
-		
-		// data = await fs.promises.readFile(filePath);
-		layout = await fs.promises.readFile(lpath, 'utf8');
-		console.log(`layout path: ${lpath}`);
-		console.log(`title path: ${tpath}`);
-		title = await fs.promises.readFile(tpath, 'utf8');
-		console.log(`title: ${title}`);
-		layout = layout.replace(/\{% get title %\}/, title);
+		if (mimeType === 'text/html') {
+			tpath = path.join(filePath, 'title.html');
+			contentPath = path.join(filePath, 'content.html');
 
-		statusCode = 200;
+			layout = await fs.promises.readFile(lpath, 'utf8');
+			title = await fs.promises.readFile(tpath, 'utf8');
+			content = await fs.promises.readFile(contentPath, 'utf8');
+
+			// Замена плейсхолдеров
+			layout = layout.replace(/\{% get title %\}/, title);
+			layout = layout.replace(/\{% get content %\}/, content);
+
+			statusCode = 200;
+		} else {
+			throw new Error('Unsupported MIME type');
+		}
 	} catch (e) {
 		console.error('Ошибка при обработке запроса:', e);
-
 		filePath = path.join(rootDir, 'pages', '404.html');
-		
+		layout = '<h1>404 Not Found</h1>';
+		statusCode = 404;
 	}
 	
 	const contentType = getMimeType(path.extname(filePath).slice(1));
 	response.writeHead(statusCode, { 'Content-Type': contentType });
+	console.log('Content-Type:', contentType);
+	console.log('Layout content:', layout);
+
 	response.end(layout);
 }).listen(3000, () => {
 	console.log('Server is running at http://localhost:3000');
@@ -88,6 +88,6 @@ function getMimeType(ext) {
 		svg: 'image/svg+xml',
 		json: 'application/json'
 	};
-	return mimes[ext] || 'text/plain';
+	return mimes[ext] || 'text/html';
 }
 
