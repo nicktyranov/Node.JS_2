@@ -1,0 +1,16 @@
+// №1⊗ndPmSvEl
+// Разберите приведенный мною код.Напишите текст, в котором вы объясните работу этого кода.
+	
+http.createServer(async (request, response) => { // создание сервера
+	let lpath  = 'layout.html'; // путь к лэйауту
+	let layout = await fs.promises.readFile(lpath, 'utf8'); //чтение лайаута
+	
+	let reg = /\{% get element '(.+?)' %\}/g; // рег выражение: найти get element + '(.+?)' - любое название элемента, которое станет match1
+	layout = layout.replace(reg, async (match0, match1) => { //заменить и сопоставить: match0 - весь текст, match1 - название элемента
+		return await fs.promises.readFile('elems/' + match1 + '.html', 'utf8');
+	}); // прочитать файл с элементом если такой есть
+	
+	response.writeHead(200, {'Content-Type': 'text/html'}); // отдать заголовок сервера
+	response.write(layout); // отдать лэйаут
+	response.end(); // закончить соединение
+}).listen(3000);
