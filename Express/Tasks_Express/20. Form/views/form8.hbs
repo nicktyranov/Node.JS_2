@@ -1,0 +1,9 @@
+{{#if body.name}}
+{{#if body.sayHi}}Hello {{else}} Bye {{/if}} {{body.name}} 
+{{else}}
+<form action="" method="POST">
+ <input type="text" name="name" placeholder="Your name">
+<input type="checkbox" name="sayHi"> sayHi?
+	<input type="submit" name="submit">
+</form>
+{{/if}}

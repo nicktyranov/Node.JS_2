@@ -1,0 +1,11 @@
+{{#if query.submit}}
+<p>Hello, {{query.name}}</p>
+{{else}}
+<form action="/rez-1" method="POST">
+	<input type="text" name="name" placeholder="Your name">
+ <input type="text" name="city" placeholder="Your city">
+ <input type="text" name="country" placeholder="Your country">
+	<input type="submit" name="submit">
+</form>
+
+{{/if}}

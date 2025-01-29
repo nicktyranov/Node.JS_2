@@ -1,0 +1,10 @@
+{{#if query.submit}}
+<p>Hello, {{query.name}}</p>
+{{else}}
+<form action="" method="GET">
+	<input type="text" name="name" placeholder="Your name">
+ 
+	<input type="submit" name="submit">
+</form>
+
+{{/if}}

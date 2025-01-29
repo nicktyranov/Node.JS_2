@@ -1,0 +1,35 @@
+<p>sqrt: {{sqrt 81}}</p>
+<p>round1: {{round1 3.14}}</p>
+<p>sum: {{sum 3.14 81 1}}</p>
+<p>firstUppercase: {{firstUppercase 'fhfhYYYY'}}</p>
+<p>dateReverse 2020-01-01: {{dateReverse '2020-01-01'}}</p>
+<p>getWeekNumber 2020-01-01 : {{getWeekNumber '2020-01-01'}}</p>
+
+<p>
+	// Передайте в представление три переменных с датами. Примените к каждой из этих переменных созданный вами ранее хелпер, меняющий формат вывода даты.
+
+	<span>{{date1}} - {{dateReverse date1}}</span><br>
+	<span>{{date2}} - {{dateReverse date2}}</span><br>
+	<span>{{date3}} - {{dateReverse date3}}</span><br>
+</p>
+
+<p>// №1⊗jsPmSMMA
+// Передайте в представление три переменных с датами. Примените к каждой из этих переменных созданный вами ранее хелпер, меняющий формат вывода даты.
+{{#each dates}}
+<span>{{dateReverse .}}</span>
+{{/each}}
+</p>
+
+<p>{{shoppingTask purchase}}</p>
+
+<div>
+	{{#each purchases}}
+	<p>{{shoppingTask this}}</p>
+	{{/each}}
+</div>
+
+<p>
+	{{{makeImgTag 'https://handymanacademy.1gegroup.com/wp-content/uploads/2024/10/logowithsloganwhite.png' 'altText'}}}
+</p>
+
+<p>{{sum data1 data2}}</p>

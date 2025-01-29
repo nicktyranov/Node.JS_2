@@ -1,0 +1,28 @@
+{{#if body}}
+{{body.country}}
+{{/if}}
+<form action="" method="POST">
+Choose your country <br>
+<select name="country">
+	<option>Russia</option>
+	<option>USA</option>
+	<option>Mexico</option>
+</select>
+	<input type="submit" name="submit">
+</form>
+
+<div>
+	{{#if body}}
+{{body.lang}}
+{{/if}}
+<form action="" method="POST">
+Choose your lang <br>
+<select name="lang">
+	<option>rus</option>
+	<option>en</option>
+	<option>es</option>
+</select>
+	<input type="submit" name="submit">
+</form>
+</div>
+

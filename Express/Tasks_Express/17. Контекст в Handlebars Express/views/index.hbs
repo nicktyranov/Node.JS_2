@@ -1,0 +1,31 @@
+<p>amount:{{amount}} </p>
+
+{{#with product}}
+ {{name}} – {{amount}} – {{cost}}
+{{/with}}
+
+<br>
+<ul>
+	{{#each products}}
+		<li>{{.}}</li>
+	{{/each}}
+</ul>
+
+<br>
+{{#if show1}}
+<div>
+	block 1
+</div>
+{{/if}}
+
+{{#if show2}}
+<div>
+	block 2
+</div>
+{{/if}}
+
+{{#if show3}}
+<div>
+	block 3
+</div>
+{{/if}}

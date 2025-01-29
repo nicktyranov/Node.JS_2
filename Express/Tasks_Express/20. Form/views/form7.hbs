@@ -1,0 +1,10 @@
+{{#if review}}
+<p>{{review}}</p>
+{{/if}}
+
+<form action="" method="POST">
+ <input type="text" name="email" placeholder="Your email" value="{{body.email}}">
+ <textarea name="review"  id="review" placeholder="review">{{body.review}}</textarea>
+	<input type="submit" name="submit">
+</form>
+
