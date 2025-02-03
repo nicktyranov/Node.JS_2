@@ -1,0 +1,18 @@
+<html lang='en'>
+	<head>
+		<meta charset='UTF-8' />
+		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+		<title>Index page</title>
+	</head>
+	<body>
+		<p>№1⊗jsPmSMMA С помощью формы спросите имя пользователя. Запишите это имя в куку. При следующем
+			заходе на сайт поприветствуйте пользователя.</p>
+		<form action='' method='post'>
+			<input type='text' placeholder='Your name' name='userName' />
+			<button>submit</button>
+		</form>
+		{{#if userName}} Hello, {{userName}} {{/if}}
+		{{#if time}} {{time}} {{/if}}
+		{{#if counter}} счетчик захода пользователя на сайт – {{counter}} {{/if}}
+	</body>
+</html>
