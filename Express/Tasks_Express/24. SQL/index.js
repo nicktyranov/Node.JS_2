@@ -488,10 +488,82 @@ app.engine('hbs', handlebars.engine);
 app.set('view engine', 'hbs');
 app.set('views', './views'); // Убедитесь, что шаблоны находятся в папке views
 
+app.get('/', async function (req, res) {
+	res.send('Server is started');
+});
+
 app.get('/1', async function (req, res) {
 	let query = 'SELECT * FROM users2';
 	let [results, fields] = await connection.query(query);
 
 	res.render('users', { results: results });
 });
+
+app.get('/del/', async function (req, res) {
+	let message = '';
+
+	try {
+		let query = 'Select id, name FROM users2';
+		let [results, fields] = await connection.query(query);
+		console.log(results);
+
+		message = `${results}`;
+		res.render('users', { message: message, results: results });
+	} catch (e) {
+		console.error(e);
+		message = e.message;
+		res.render('users', { message: message });
+	}
+});
+app.get('/del1/', async function (req, res) {
+	let message = '';
+
+	try {
+		let query = 'Select * FROM users2';
+		let [results, fields] = await connection.query(query);
+		console.log(results);
+
+		message = `${results}`;
+		res.render('users', { message: message, results: results });
+	} catch (e) {
+		console.error(e);
+		message = e.message;
+		res.render('users', { message: message });
+	}
+});
+
+app.get('/show/:id', async function (req, res) {
+	let id = req.params.id;
+	let query = `SELECT * FROM users WHERE id = ${id}`;
+
+	let [results, fields] = await connection.query(query);
+	let result = results[0];
+	res.render('show', { result: result });
+});
+
+app.get('/index', async function (req, res) {
+	let query = 'SELECT * FROM users2';
+
+	let [results, fields] = await connection.query(query);
+	let result = results;
+	res.render('index', { result: result });
+});
+
+app.use(express.urlencoded({ extended: true }));
+app.get('/add', async function (req, res) {
+	res.render('form', { name: '', age: '', salary: '', message: '' });
+});
+
+app.post('/add', async function (req, res) {
+	let name = req.body.name;
+	let age = +req.body.age;
+	let salary = +req.body.salary;
+	let query = `INSERT INTO users2 
+	(name, age, salary) 
+	VALUES (?, ?, ?)`;
+
+	let [results, fields] = await connection.query(query, [name, age, salary]);
+	res.render('form', { name, age, salary });
+});
+
 app.listen(3000, () => console.log('Server started: http://localhost:3000'));

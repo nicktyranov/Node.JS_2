@@ -10,5 +10,115 @@
 			<b>{{results.age}}</b>
 			<b>{{results.salary}}</b>
 		</p>
+		<p>
+			{{#each results}}
+				<br />name:
+				<b>{{name}}</b>
+				<br />age:
+				<b>{{age}}</b>
+				<br />salary:
+				<b>{{salary}}</b>
+			{{/each}}
+		</p>
+		<div>
+			<p>№1⊗ndSqDPOF Выведите записи нашей таблицы в следующем виде:</p>
+			{{#each results}}
+				<div>
+					<h2>{{name}}</h2>
+					<p>
+						{{age}},
+						<b>{{salary}}$</b>
+					</p>
+				</div>
+
+			{{/each}}
+		</div>
+		<div>
+			<p>№2⊗ndSqDPOF Выведите записи нашей таблицы в следующем виде:</p>
+
+			<table>
+				<tr>
+					<th>id</th>
+					<th>name</th>
+					<th>age</th>
+					<th>salary</th>
+				</tr>
+				{{#each results}}
+					<tr>
+						<td>{{id}}</td>
+						<td>{{name}}</td>
+						<td>{{age}}</td>
+						<td>{{salary}}</td>
+					</tr>
+				{{/each}}
+			</table>
+
+		</div>
+
+		<div>
+			{{message}}
+		</div>
+
+		<div>
+			<p>№2⊗ndSqDPDR Модифицируйте предыдущую задачу так, чтобы на странице были ссылки для удаления
+				каждого юзера:
+
+				<a href='/remove/1'>user1</a>
+				<a href='/remove/2'>user2</a>
+				<a href='/remove/3'>user3</a>
+				Ссылки, конечно же, должны формироваться в цикле из полученных из БД данных.</p>
+			<div>
+				{{#each results}}
+					<a href='/remove/{{id}}'>Delete – {{name}}</a>
+				{{/each}}
+			</div>
+		</div>
+
+		<div>
+			<p>№3⊗ndSqDPDR Модифицируйте предыдущую задачу так, чтобы у вас был следующий HTML код:
+
+				<ul>
+					<li>user1 <a href='/remove/1'>удалить</a></li>
+					<li>user2 <a href='/remove/2'>удалить</a></li>
+					<li>user3 <a href='/remove/2'>удалить</a></li>
+				</ul></p>
+			<div>
+				{{#each results}}
+					<li>{{name}} <a href='/remove/{{id}}'>удалить</a></li>
+
+				{{/each}}
+			</div>
+		</div>
+
+		<div>
+			№4⊗ndSqDPDR Модифицируйте предыдущую задачу так, чтобы у вас был следующий HTML код:
+
+			<table>
+				<tr>
+					<th>id</th>
+					<th>name</th>
+					<th>age</th>
+					<th>salary</th>
+					<th>delete</th>
+				</tr>
+				{{#each results}}
+					<tr>
+
+						<td>{{id}}</td>
+						<td>{{name}}</td>
+						<td>{{age}}</td>
+						<td>{{salary}}</td>
+						<td><a href='/remove/{{id}}'>удалить</a></td>
+
+					</tr>
+				{{/each}}
+			</table>
+			<div>
+				{{#each results}}
+					<li>{{name}} <a href='/remove/{{id}}'>удалить</a></li>
+
+				{{/each}}
+			</div>
+		</div>
 	</body>
 </html>
