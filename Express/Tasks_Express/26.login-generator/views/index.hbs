@@ -1,0 +1,38 @@
+<html lang='en'>
+	<head>
+		<meta charset='UTF-8' />
+		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+		<title>Login Generator</title>
+		<script defer src='/script.js'/></script>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<div class="main">
+			<h1>Login Generator</h1>
+			<div class="filter">
+				<h2>Filters</h2>
+
+				<form action="" method="post" class="filter">
+					<label for='rangeSym'>Choose login length:</label>
+				<input type='range' name='rangeSym' id='rangeSym' min='2' max='32' step='1' value='16' />
+				<span id='rangeValue'></span>
+
+				<br />
+				<label for='letters'>Put preferred letters and symbols for a new login:</label>
+				<input type='text' name='letters' id='letters' />
+				<span id='lettersValue'></span>
+
+				<br />
+
+				<input type='submit' />
+				</form>
+				{{#if login}}
+				<p> your random login is {{login}}</p>
+				{{/if}}
+				{{#if error}}
+				<p class="error">{{error}}</p>
+				{{/if}}
+			</div>
+		</div>
+	</body>
+</html>

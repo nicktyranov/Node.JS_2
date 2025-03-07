@@ -1,0 +1,30 @@
+body {
+}
+
+.main {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding: 20px;
+	background-color: aquamarine;
+	max-width: 600px;
+	margin: 0 auto;
+}
+
+.filter {
+	display: flex;
+	flex-direction: column;
+	/* justify-content: center; */
+	/* align-items: center; */
+}
+
+.error {
+	background-color: brown;
+	color: aliceblue;
+	text-align: center;
+}
+
+#rangeValue {
+	text-align: center;
+}
