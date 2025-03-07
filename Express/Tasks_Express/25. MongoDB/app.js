@@ -1,4 +1,9 @@
 import mongodb from 'mongodb';
+import { ObjectId } from 'mongodb';
+import express from 'express';
+import expressHandlebars from 'express-handlebars';
+
+const app = express();
 
 let mongoClient = new mongodb.MongoClient('mongodb://localhost:27017/', {
 	// useUnifiedTopology: true
@@ -169,11 +174,11 @@ async function run() {
 
 		//Установите всем продуктам цену в 1000.
 		console.log('Установите всем продуктам цену в 1000');
-		console.log(await coll2.updateMany({}, { $set: { cost: 1000 } }));
+		// console.log(await coll2.updateMany({}, { $set: { cost: 1000 } }));
 
 		//Установите всем продуктам цену в 300 и остаток в 10.
 		console.log('Установите всем продуктам цену в 300 и остаток в 10.');
-		console.log(await coll2.updateMany({}, { $set: { cost: 300, rest: 10 } }));
+		// console.log(await coll2.updateMany({}, { $set: { cost: 300, rest: 10 } }));
 
 		//Получите первый продукт. При получении добавьте ему поле touch, в которое запишется момент времени получения продукта.
 		console.log(
@@ -213,15 +218,271 @@ async function run() {
 		console.log(await coll2.find({ cost: { $nin: [100, 200] } }).toArray());
 
 		//Удалите все продукты, у которых цена больше 300.
-		console.log(await coll2.deleteMany({ cost: { $gt: 300 } }));
+		// console.log(await coll2.deleteMany({ cost: { $gt: 300 } }));
 
 		//Удалите все продукты, у которых цена равна 100 или 200.
-		console.log(await coll2.deleteMany({ cost: [100, 200] }));
+		// console.log(await coll2.deleteMany({ cost: [100, 200] }));
+
+		console.log('в порядке возрастания');
+		// Отсортируйте продукты в порядке возрастания их цены.
+		console.log(await coll2.find().sort({ cost: 1 }).toArray());
+
+		console.log('в порядке убывания ');
+		//Отсортируйте продукты в порядке убывания их цены.
+		console.log(await coll2.find().sort({ cost: -1 }).toArray());
+
+		//Получите первые три продукта.
+		console.log('Получите первые три продукта.');
+		console.log(await coll2.find().limit(3).toArray());
+
+		//Получите вторые три продукта.
+		console.log('Получите вторые три продукта.');
+		console.log(await coll2.find().skip(3).limit(3).toArray());
+
+		//Отсортируйте продукты по цене. Из результата сортировки получите первых 5 продуктов.
+		console.log(
+			'Отсортируйте продукты по цене. Из результата сортировки получите первых 5 продуктов.'
+		);
+		console.log(await coll2.find().sort({ cost: 1 }).limit(5).toArray());
+
+		[
+			{
+				name: 'john',
+				addr: {
+					country: 'Britain',
+					city: 'London'
+				}
+			},
+			{
+				name: 'luis',
+				addr: {
+					country: 'Britain',
+					city: 'London'
+				}
+			},
+			{
+				name: 'eric',
+				addr: {
+					country: 'Britain',
+					city: 'Manchester'
+				}
+			},
+			{
+				name: 'kyle',
+				addr: {
+					country: 'France',
+					city: 'Paris'
+				}
+			}
+		];
+		//Из приведенной коллекции получите всех юзеров из Лондона.
+		console.log('из Лондона');
+		coll2 = await db.collection('users');
+		console.log(await coll2.find({ 'addr.city': 'London' }).toArray());
+
+		//Из приведенной коллекции получите всех работников с зарплатой 2000.
+		[
+			{
+				employee: {
+					name: 'john',
+					addr: {
+						country: 'Britain',
+						city: 'London'
+					},
+					position: {
+						name: 'programmer',
+						salary: 1000
+					}
+				}
+			},
+			{
+				employee: {
+					name: 'luis',
+					addr: {
+						country: 'Britain',
+						city: 'London'
+					},
+					position: {
+						name: 'programmer',
+						salary: 1000
+					}
+				}
+			},
+			{
+				employee: {
+					name: 'eric',
+					addr: {
+						country: 'Britain',
+						city: 'Manchester'
+					},
+					position: {
+						name: 'programmer',
+						salary: 2000
+					}
+				}
+			},
+			{
+				employee: {
+					name: 'kyle',
+					addr: {
+						country: 'France',
+						city: 'Paris'
+					},
+					position: {
+						name: 'programmer',
+						salary: 2000
+					}
+				}
+			}
+		];
+		console.log('Из приведенной коллекции получите всех работников с зарплатой 2000');
+		console.log(await coll2.find({ 'employee.position.salary': 2000 }).toArray());
+
+		//Из приведенной коллекции получите всех юзеров, которые знают испанский.
+		console.log('Из приведенной коллекции получите всех юзеров, которые знают испанский.');
+		console.log(await coll2.find({ langs: 'spanish' }).toArray());
+
+		//Из приведенной коллекции получите всех юзеров, которые знают немецкий и испанский.
+		console.log('знают немецкий и испанский');
+		console.log(await coll2.find({ langs: { $all: ['spanish', 'german'] } }).toArray());
+
+		//Из приведенной коллекции получите всех юзеров, у которых испанский является вторым элементом в массиве.
+		console.log('испанский является вторым элементом в массиве');
+		console.log(await coll2.find({ 'langs.1': 'spanish' }).toArray());
+
+		//Получите продукты, у которых три цвета.
+		console.log('три цвета');
+		coll2 = await db.collection('clothes');
+		console.log(await coll2.find({ colors: { $size: 3 } }).toArray());
+
+		//Получите продукты, размер которых содержит значение из диапазона от 3 до 5.
+		console.log('размер которых содержит значение из диапазона от 3 до 5.');
+		console.log(await coll2.find({ sizes: { $in: [3, 4, 5] } }).toArray());
+
+		let collection = await mongoClient.db('test').collection('prods');
+
+		app.get('/prods', async (req, res) => {
+			let rez = await collection.find({}).toArray();
+			console.log('/prods');
+			console.log(rez);
+			res.json(rez);
+		});
+
+		app.get('/prods/prod/:name', async (req, res) => {
+			let request = req.params.name;
+			let rez = await collection.find({ name: request }).toArray();
+			console.log('/prods');
+			console.log(rez);
+			res.json(rez);
+		});
+
+		//Модифицируйте предыдущую задачу так, чтобы продукт показывался по его id.
+		//67c21edf4d7161ccc1b5cf46
+		app.get('/prods/pr/:id', async (req, res) => {
+			let id = req.params.id;
+			let objectId = new ObjectId(id);
+			let rez = await collection.find({ _id: objectId.toString() }).toArray();
+			console.log('/prods');
+			console.log(rez);
+			res.json(rez);
+		});
 	} catch (error) {
 		console.error('Error:', error);
-	} finally {
-		await mongoClient.close();
 	}
-}
 
-run();
+	//Сделайте маршрут, который будет показывать в браузере определенный продукт по его имени.
+	app.get('/prods/show/:name', async (req, res) => {
+		const db2 = mongoClient.db('test');
+		let coll3 = await db2.collection('prods');
+		let name = req.params.name;
+		let rez = await coll3.findOne({ name: name });
+		console.log(rez);
+		res.json(rez);
+	});
+
+	//Выведите данные продукта, оформив их в какую-нибудь верстку.
+	const handlebars = expressHandlebars.create({
+		defaultLayout: 'layout',
+		extname: 'hbs'
+	});
+	app.engine('hbs', handlebars.engine);
+	app.set('view engine', 'hbs');
+	app.set('views', './views');
+
+	app.get('/prods/show-info/:name', async (req, res) => {
+		const db2 = mongoClient.db('test');
+		let coll3 = await db2.collection('prods');
+		let name = req.params.name;
+		let rez = await coll3.findOne({ name: name });
+		console.log(rez);
+		//Сделайте так, чтобы, если запрошенный продукт не найден, то рендерился файл с 404 ошибкой.
+		if (rez) {
+			res.render('prod', { prod: rez });
+		} else {
+			res.status(404).send('error 404');
+		}
+	});
+	//Выведите записи из коллекции с продуктами, оформив их в приведенную верстку.
+	app.get('/prods/all', async (req, res) => {
+		const db2 = mongoClient.db('test');
+		let coll3 = await db2.collection('prods');
+		let rez = await coll3.find({}).toArray();
+		if (rez) {
+			res.render('task1', { rez: rez });
+		} else {
+			res.status(404).send('error 404');
+		}
+	});
+
+	//Добавьте такую же ссылку в таблицу с вашими продуктами.
+	app.get('/prods/all2', async (req, res) => {
+		const db2 = mongoClient.db('test');
+		let coll3 = await db2.collection('prods');
+		let rez = await coll3.find({}).toArray();
+		if (rez) {
+			res.render('task2', { rez: rez });
+		} else {
+			res.status(404).send('error 404');
+		}
+	});
+
+	//Добавьте ссылку на удаление для каждого продукта из вашей таблицы с продуктами.
+	app.get('/prods/show-info/delete/:name', async (req, res) => {
+		const db2 = mongoClient.db('test');
+		let coll3 = await db2.collection('prods');
+		let name = req.params.name;
+		let rez = await coll3.deleteOne({ name: name });
+
+		let updatedRez = await coll3.find({}).toArray();
+		res.render('task4', { rez: updatedRez, message: `deleted successfully ${name}` });
+	});
+
+	app.get('/prods/all3', async (req, res) => {
+		const db2 = mongoClient.db('test');
+		let coll3 = await db2.collection('prods');
+		let rez = await coll3.find({}).toArray();
+		if (rez) {
+			res.render('task3', { rez: rez });
+		} else {
+			res.status(404).send('error 404');
+		}
+	});
+
+	//Сделайте форму для добавления нового продукта
+	app.use(express.urlencoded({ extended: true }));
+	app.use(express.json());
+
+	app.get('/prods/add', async (req, res) => {
+		res.render('task5');
+	});
+
+	app.post('/prods/add', async (req, res) => {
+		const db2 = mongoClient.db('test');
+		let coll3 = await db2.collection('prods');
+		console.log(req.body);
+		await coll3.insertOne(req.body);
+		let newRez = coll3.find({}).toArray();
+		res.render('task5', { rez: newRez, message: 'Added product: ' + req.body.name });
+	});
+}
+run().then(() => app.listen(3001, () => console.log(`http://localhost:${3001}/prods`)));
