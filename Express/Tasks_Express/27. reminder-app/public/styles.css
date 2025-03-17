@@ -1,0 +1,101 @@
+*,
+::before,
+::after {
+	box-sizing: border-box;
+}
+
+a {
+	text-decoration: none;
+	color: black;
+}
+
+.menu-list {
+	list-style: none;
+	text-decoration: solid;
+	padding: 5px 15px;
+	background-color: rgb(225, 225, 225);
+	display: flex;
+	/* gap: 10px; */
+	justify-content: center;
+	align-items: center;
+	text-transform: capitalize;
+}
+
+.menu-list li:not(:last-child)::after {
+	content: '|';
+	margin: 0 10px;
+}
+
+.menu-list li:hover a {
+	color: gray;
+}
+
+.form {
+	max-width: 500px;
+	margin: 0 auto;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+	padding: 20px;
+	border: 1px solid gray;
+	border-radius: 10px;
+}
+
+.form input,
+.form button {
+	font-size: 16px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.message {
+	padding: 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	max-width: 300px;
+	margin: 0 auto;
+	border: 1px solid sandybrown;
+}
+
+.reminder-list {
+	margin: 20px;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 15px;
+}
+
+.reminder {
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	/* align-items: center; */
+	border: 1px solid black;
+	max-width: 350px;
+}
+
+.reminder.less1day {
+	background-color: #ffcccc;
+}
+
+.reminder.less2days {
+	background-color: #ffeb99;
+}
+
+.reminder.less3days {
+	background-color: #ccffcc;
+}
+.reminder-info {
+	text-align: left;
+}
+
+.reminder-buttons {
+	display: flex;
+	gap: 15px;
+	/* align-content: space-between; */
+	justify-content: center;
+}
+
+.align-center {
+	text-align: center;
+}

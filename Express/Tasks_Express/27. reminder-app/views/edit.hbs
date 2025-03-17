@@ -1,0 +1,22 @@
+<div>
+	<h2 class='align-center'>Edit your reminder</h2>
+	{{#if data}}
+		<form action='' method='post' class='form'>
+			<input
+				type='text'
+				name='name'
+				id=''
+				placeholder='Enter the name of a reminder (action)'
+				value='{{data.name}}'
+			/>
+			<input
+				type='date'
+				name='date'
+				id=''
+				placeholder='Enter the date of the event'
+				value='{{data.date}}'
+			/>
+			<button type='submit'>save this reminder</button>
+		</form>
+	{{/if}}
+</div>

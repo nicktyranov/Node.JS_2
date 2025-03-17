@@ -1,0 +1,30 @@
+{{#if message}}
+	<div class='message align-center'>{{message}}</div>
+
+{{/if}}
+<div class='reminder-list'>
+	{{#if data}}
+		{{#each data}}
+
+			<div class='reminder {{cssClass}}'>
+				<div class='reminder-info'><p>name: <span>{{name}}</span></p>
+					<p>date: <span>{{{formatDate date}}}</span></p>
+				</div>
+				<div class='reminder-buttons'>
+					<button id='delete'><a href='/delete/{{_id}}'>delete</a> </button>
+					<button id='edit'><a href='/edit/{{_id}}'>edit</a> </button>
+					<button id='edit'><a href='/delay/{{_id}}'>delay</a> </button>
+					<button id='done'><a href='/done/{{_id}}'>done</a> </button>
+				</div>
+			</div>
+
+		{{/each}}
+	{{/if}}
+</div>
+{{! <h2>Add a reminder</h2>
+<form action='' method='post'>
+	<input type='text' name='name' id='' placeholder='Enter the name of a reminder (action)' />
+	<br />
+	<input type='date' name='date' id='' placeholder='Enter the date of the event' />
+	<button type='submit'>add this reminder</button>
+</form> }}
