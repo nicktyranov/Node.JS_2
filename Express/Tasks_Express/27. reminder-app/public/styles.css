@@ -47,6 +47,13 @@ a {
 	font-family: Arial, Helvetica, sans-serif;
 }
 
+.form input:first-child {
+	min-height: 30px;
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	white-space: normal;
+}
+
 .message {
 	padding: 10px;
 	display: flex;
@@ -58,9 +65,10 @@ a {
 }
 
 .reminder-list {
-	margin: 20px;
+	margin: 20px 0 0;
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
+	justify-items: center;
 	gap: 15px;
 }
 
@@ -72,6 +80,13 @@ a {
 	/* align-items: center; */
 	border: 1px solid black;
 	max-width: 350px;
+	width: 100%;
+}
+
+.reminder-info p {
+	word-wrap: break-word;
+	overflow-wrap: break-word;
+	white-space: normal;
 }
 
 .reminder.less1day {
@@ -98,4 +113,25 @@ a {
 
 .align-center {
 	text-align: center;
+}
+
+@media (max-width: 870px) {
+	.reminder-list {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 10px;
+	}
+}
+
+@media (max-width: 600px) {
+	.reminder {
+		max-width: 200px;
+	}
+
+	.reminder-buttons {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 15px;
+		/* align-content: space-between; */
+		/* justify-content: center; */
+	}
 }
