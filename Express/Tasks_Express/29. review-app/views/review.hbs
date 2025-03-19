@@ -1,0 +1,16 @@
+<div>
+	<h2 class='align-center'>View this review</h2>
+	{{#if data}}
+		{{#each data}}
+			<div>
+				<img src='/{{photo}}' alt='Review photo' />
+				<p><span>date: </span>{{createdAt}}</p>
+				<p><span>author: </span>{{author}}</p>
+				<p><span>review Type: </span>{{reviewType}}</p>
+				<p><span>advantages: </span>{{advantages}}</p>
+				<p><span>disadvantages: </span>{{disadvantages}}</p>
+				<p><span>comments: </span>{{comments}}</p>
+			</div>
+		{{/each}}
+	{{/if}}
+</div>

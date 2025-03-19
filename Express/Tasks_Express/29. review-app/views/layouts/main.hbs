@@ -1,0 +1,25 @@
+<html lang='en'>
+	<head>
+		<meta charset='UTF-8' />
+		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+		<title>Review App | {{title}}</title>
+		<link rel='stylesheet' href='/styles.css' />
+
+	</head>
+	<body>
+		<h1 class='align-center'>Review App | {{title}}</h1>
+		<nav><ul class='menu-list'>
+				<li><a href='/leave-a-review'>Leave a review</a></li>
+				<li><a href='/'>Main page</a></li>
+				<li><a href='/all'>All reviews</a></li>
+				<li><a href='/login'>login</a></li>
+			</ul></nav>
+		{{{body}}}
+		<footer>
+			<p class='align-center'>&copy; <span id='year'></span> Nikolai Tyranov</p>
+		</footer>
+		<script>
+			document.getElementById('year').textContent = new Date().getFullYear();
+		</script>
+	</body>
+</html>

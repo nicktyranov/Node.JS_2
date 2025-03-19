@@ -1,0 +1,27 @@
+<h2 class='align-center'>Admin Manage Panel </h2>
+<p>Number of reviews that need your action: <span>{{data.length}}</span></p>
+<div class='reviews-list'>
+	{{#if data}}
+		{{#each data}}
+			<div class='review'>
+
+				<p><span>_id: </span>{{_id}}</p>
+				<p><span>author: </span>{{author}}</p>
+				<p><span>productId: </span>{{productId}}</p>
+				<p><span>productName: </span>{{productName}}</p>
+				<p><span>review type: </span>{{reviewType}}</p>
+				<p><span>advantages: </span>{{advantages}}</p>
+				<p><span>disadvantages: </span>{{disadvantages}}</p>
+				<p><span>comments: </span>{{comments}}</p>
+				<p><span>photo: </span> {{photo}}</p>
+				<p><span>createdAt: </span>{{createdAt}}</p>
+				<p><span>reviewStatus: </span>{{reviewStatus}}</p>
+				<div>
+					<button><a href='/admin/review/{{_id}}'>approve</a></button>
+					<button><a href='/admin/review/{{_id}}'>decline</a></button>
+					<button><a href='/admin/review/edit/{{_id}}'>edit</a></button>
+				</div>
+			</div>
+		{{/each}}
+	{{/if}}
+</div>

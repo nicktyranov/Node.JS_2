@@ -1,0 +1,40 @@
+<div>
+	<h2 class='align-center'>Leave your review</h2>
+
+	<form action='' method='post' class='form' enctype='multipart/form-data'>
+
+		{{#if data}}
+			<div>
+				<label for='author'>Your name</label>
+				<input type='text' name='author' />
+			</div>
+			<div>
+
+				<label for='select'>Choose your product</label>
+				<select name='select'>
+
+					{{#each data}}
+						<option value={{_id}}>{{name}}</option>
+					{{/each}}
+				</select>
+
+			</div>
+			<div>
+				<label for='review-type'>What's a kind of review?</label>
+				<input type='radio' name='reviewType' id='' value='negative' />negative
+				<input type='radio' name='reviewType' id='' value='positive' />positive
+			</div>
+			<label for='pros'>Advantages</label>
+			<textarea name='pros'></textarea>
+			<label for='cons'>Disadvantages</label>
+			<textarea name='cons'></textarea>
+			<label for='text'>Comments</label>
+			<textarea name='text'></textarea>
+			<input type='file' name='photoImg' id='' />
+
+		{{/if}}
+
+		<button type='submit'>Leave this review</button>
+	</form>
+
+</div>
