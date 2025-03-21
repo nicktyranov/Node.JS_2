@@ -17,9 +17,16 @@
 				<p><span>createdAt: </span>{{createdAt}}</p>
 				<p><span>reviewStatus: </span>{{reviewStatus}}</p>
 				<div>
-					<button><a href='/admin/review/{{_id}}'>approve</a></button>
-					<button><a href='/admin/review/{{_id}}'>decline</a></button>
-					<button><a href='/admin/review/edit/{{_id}}'>edit</a></button>
+					<form action='/admin/review/{{_id}}' method='get'>
+						<button>approve</button>
+					</form>
+					<form action='/admin/review/delete/{{_id}}' method='post'>
+						<button>decline</button>
+					</form>
+					<form action='/admin/review/edit/{{_id}}' method='get'>
+						<button>edit</button>
+					</form>
+
 				</div>
 			</div>
 		{{/each}}

@@ -1,0 +1,35 @@
+
+<div>
+	<h2 class='align-center'>Edit review</h2>
+
+	<form method='post' class='form'>
+
+		{{#if loginData}}
+		{{#each loginData}}
+			<div>
+				<label for='author'>Your name</label>
+				<input type='text' name='author' value='{{author}}' />
+			</div>
+			<div>
+				<label for='select'>Choosen your product</label>
+				<input type="text" name="product" id="" value="{{#if productName}}{{productName}}{{else}}{{productId}}{{/if}}">
+			</div>
+			<div>
+				<label for='review-type'>What's a kind of review?</label>
+				<input type='radio' name='reviewType' value='negative'
+					{{#if (eq reviewType "negative")}}checked{{/if}}>negative
+				<input type='radio' name='reviewType' value='positive'
+					{{#if (eq reviewType "positive")}}checked{{/if}}>positive
+			</div>
+			<label for='pros'>Advantages</label>
+			<textarea name='pros'>{{advantages}}</textarea>
+			<label for='cons'>Disadvantages</label>
+			<textarea name='cons'>{{disadvantages}}</textarea>
+			<label for='text'>Comments</label>
+			<textarea name='text'>{{comments}}</textarea>
+			{{/each}}
+		{{/if}}
+
+		<button type='submit'>Update this review</button>
+	</form>
+</div>

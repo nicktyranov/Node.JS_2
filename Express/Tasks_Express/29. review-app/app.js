@@ -1,5 +1,6 @@
 import express from 'express';
 import { engine } from 'express-handlebars';
+import handlebars from 'handlebars';
 import mongodb from 'mongodb';
 import { ObjectId } from 'mongodb';
 import multer from 'multer';
@@ -30,17 +31,27 @@ app.use(
 		saveUninitialized: false,
 		cookie: {
 			httpOnly: true,
-			maxAge: 1000 * 60 * 60 * 24
+			maxAge: 1000 * 60 * 60 * 24,
+			sameSite: 'lax',
+			secure: false
 		}
 	})
 );
-app.use(express.static('public'));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static('public'));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use((req, res, next) => {
 	console.log(`Incoming request: ${req.method} ${req.url}`);
 	next();
+});
+
+handlebars.registerHelper('eq', function (a, b) {
+	return a?.toString() === b?.toString();
+});
+
+handlebars.registerHelper('or', function (a, b) {
+	return a || b;
 });
 
 const storage = multer.diskStorage({
@@ -161,6 +172,9 @@ app.get('/review/:id', async (req, res) => {
 });
 
 app.get('/login', async (req, res) => {
+	if (req.session.userId) {
+		return res.redirect('/admin');
+	}
 	res.render('login', { title: 'Login page' });
 });
 
@@ -179,10 +193,8 @@ app.post('/login', async (req, res) => {
 			.status(401)
 			.render('login', { error: 'Invalid credentials', title: 'Login page: error' });
 	}
+	console.log('Stored hash:', user.password);
 
-	console.log('Stored hash:', user.password); // 🔍 Отладка: проверяем, какой хэш хранится в БД
-
-	// ✅ Сравниваем введенный пароль с хешем
 	const match = await bcrypt.compare(password, user.password);
 
 	if (!match) {
@@ -192,7 +204,6 @@ app.post('/login', async (req, res) => {
 			.render('login', { error: 'Invalid credentials', title: 'Login page: error' });
 	}
 
-	// ✅ Если все ок – сохраняем пользователя в сессию
 	req.session.userId = user._id;
 	res.redirect('/admin');
 });
@@ -209,11 +220,79 @@ function isAuthenticated(req, res, next) {
 
 app.get('/admin', isAuthenticated, async (req, res) => {
 	// res.send('authorised user' + req.session.userId);
+	console.log('Проверка сессии в админке:', req.session);
+	console.log('UserId:', req.session.userId);
 	const db = mongoClient.db('reviewsApp');
 	const collection = db.collection('reviews');
 	let data = await collection.find({ reviewStatus: 'pending' }).toArray();
 	console.log(data);
 	res.render('admin', { data, title: 'Admin page' });
+});
+
+app.get('/admin/review/:id', async (req, res) => {
+	const id = req.params.id;
+	const db = mongoClient.db('reviewsApp');
+	const collection = db.collection('reviews');
+	let data = await collection.updateOne(
+		{ _id: new ObjectId(id) },
+		{ $set: { reviewStatus: 'approved' } }
+	);
+	console.log(`new changes: ${JSON.stringify(data)}`);
+	res.redirect('/admin');
+});
+
+app.delete('/admin/review/:id', async (req, res) => {
+	const id = req.params.id;
+	const db = mongoClient.db('reviewsApp');
+	const collection = db.collection('reviews');
+	await collection.deleteOne({ _id: new ObjectId(id) });
+	res.redirect('/admin');
+});
+
+app.get('/admin/review/edit/:id', async (req, res) => {
+	const id = req.params.id;
+	const db = mongoClient.db('reviewsApp');
+
+	const reviewsCollection = db.collection('reviews');
+	let loginData = await reviewsCollection.findOne({ _id: new ObjectId(id) });
+
+	const productsCollection = db.collection('products');
+	let data = await productsCollection.find().toArray();
+
+	res.render('edit', { loginData: [loginData], data: data });
+});
+
+app.post('/admin/review/edit/:id', async (req, res) => {
+	const id = req.params.id;
+	console.log('Incoming edit data:', req.body);
+	console.log('Incoming request method:', req.method);
+	console.log('Incoming request headers:', req.headers);
+	console.log('Incoming request body:', req.body);
+	const db = mongoClient.db('reviewsApp');
+
+	const reviewsCollection = db.collection('reviews');
+	await reviewsCollection.updateOne(
+		{ _id: new ObjectId(id) },
+		{
+			$set: {
+				author: req.body.author,
+				reviewType: req.body.reviewType,
+				advantages: req.body.pros,
+				disadvantages: req.body.cons,
+				comments: req.body.text
+			}
+		}
+	);
+	res.redirect(302, '/admin');
+});
+
+app.post('/admin/review/delete/:id', async (req, res) => {
+	const id = req.params.id;
+	const db = mongoClient.db('reviewsApp');
+
+	const reviewsCollection = db.collection('reviews');
+	await reviewsCollection.deleteOne({ _id: new ObjectId(id) });
+	res.redirect(302, '/admin');
 });
 
 app.post('/logout', (req, res) => {
