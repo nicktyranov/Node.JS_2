@@ -1,10 +1,17 @@
-<div>
+<div class='view-review--wrapper'>
 	<h2 class='align-center'>View this review</h2>
 	{{#if data}}
 		{{#each data}}
 			<div>
-				<img src='/{{photo}}' alt='Review photo' />
-				<p><span>date: </span>{{createdAt}}</p>
+				<div id='review-img'>
+					{{#if photo}}
+						<img src='/{{photo}}' alt='Review photo' />
+					{{else}}
+						<img src='/products/{{productPhoto}}' alt='Review photo 1' />
+					{{/if}}
+				</div>
+
+				<p><span>date: </span>{{dateConverter createdAt}}</p>
 				<p><span>author: </span>{{author}}</p>
 				<p><span>review Type: </span>{{reviewType}}</p>
 				<p><span>advantages: </span>{{advantages}}</p>

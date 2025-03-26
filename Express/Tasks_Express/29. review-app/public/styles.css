@@ -76,6 +76,26 @@ footer {
 	font-weight: 700;
 }
 
+.loginForm {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	max-width: 350px;
+	justify-content: center;
+	align-items: center;
+	margin: 0 auto;
+	width: 100%;
+}
+
+.loginForm input {
+	width: 100%;
+}
+.loginForm label {
+	align-self: flex-start;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+}
+
 .message {
 	padding: 10px;
 	display: flex;
@@ -126,6 +146,89 @@ footer {
 	text-align: center;
 }
 
+.card {
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	justify-content: center;
+	/* align-items: center; */
+	border: 1px solid black;
+	max-width: 250px;
+	width: 100%;
+	min-height: 350px;
+	overflow: hidden;
+}
+
+.card p:not(:first-child) {
+	font-size: 14px;
+}
+
+.card span {
+	font-weight: 700;
+}
+.card span:first-child {
+	text-align: center;
+}
+
+.card-img {
+	width: 100%;
+	max-height: 100px;
+	margin: 0 auto;
+	max-width: 100px;
+}
+
+.card-img img {
+	width: 100%;
+	max-height: 100px;
+	max-width: 100px;
+	object-fit: contain;
+}
+
+.cards-list {
+	margin: 10px 0;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	justify-items: center;
+	gap: 10px;
+}
+
+.link {
+	align-self: flex-end;
+	justify-items: flex-end;
+	margin-top: auto;
+}
+
+.comment {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	min-height: 100px;
+	/* white-space: nowrap;
+	-webkit-line-clamp: 3; */
+	/* -webkit-box-orient: vertical; */
+}
+
+.view-review--wrapper {
+	/* display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center; */
+}
+
+.view-review--wrapper img {
+	width: 100%;
+	max-height: 500px;
+	object-fit: contain;
+}
+
+.view-review--wrapper span {
+	font-weight: 700;
+}
+
+#review-img {
+	max-width: 500px;
+	margin: 0 auto;
+}
 @media (max-width: 870px) {
 	.review-list {
 		grid-template-columns: repeat(2, 1fr);
@@ -144,5 +247,10 @@ footer {
 		gap: 15px;
 		/* align-content: space-between; */
 		/* justify-content: center; */
+	}
+
+	.cards-list {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 5px;
 	}
 }

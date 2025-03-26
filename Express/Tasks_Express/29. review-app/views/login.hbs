@@ -1,13 +1,13 @@
-<form method='post'>
+<form method='post' class='loginForm'>
 	{{#if error}}
 		<div>
 			<p>{{error}}</p>
 		</div>
 	{{/if}}
-	<label for='username'></label>
+	<label for='username'>username</label>
 	<input type='text' name='username' placeholder='Enter your username' />
 
-	<label for='password'></label>
+	<label for='password'>password</label>
 	<input type='password' name='password' placeholder='Enter your password' />
 
 	<input type='submit' />

@@ -14,7 +14,7 @@
 				<p><span>disadvantages: </span>{{disadvantages}}</p>
 				<p><span>comments: </span>{{comments}}</p>
 				<p><span>photo: </span> {{photo}}</p>
-				<p><span>createdAt: </span>{{createdAt}}</p>
+				<p><span>createdAt: </span>{{dateConverter createdAt}}</p>
 				<p><span>reviewStatus: </span>{{reviewStatus}}</p>
 				<div>
 					<form action='/admin/review/{{_id}}' method='get'>
