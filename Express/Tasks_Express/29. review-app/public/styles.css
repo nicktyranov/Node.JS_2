@@ -33,7 +33,6 @@ footer {
 	padding: 5px 15px;
 	background-color: rgb(225, 225, 225);
 	display: flex;
-	/* gap: 10px; */
 	justify-content: center;
 	align-items: center;
 	text-transform: capitalize;
@@ -119,7 +118,6 @@ footer {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-	/* align-items: center; */
 	border: 1px solid black;
 	max-width: 350px;
 	width: 100%;
@@ -138,7 +136,6 @@ footer {
 .review-buttons {
 	display: flex;
 	gap: 15px;
-	/* align-content: space-between; */
 	justify-content: center;
 }
 
@@ -152,7 +149,6 @@ footer {
 	flex-direction: column;
 	gap: 4px;
 	justify-content: center;
-	/* align-items: center; */
 	border: 1px solid black;
 	max-width: 250px;
 	width: 100%;
@@ -203,16 +199,6 @@ footer {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	min-height: 100px;
-	/* white-space: nowrap;
-	-webkit-line-clamp: 3; */
-	/* -webkit-box-orient: vertical; */
-}
-
-.view-review--wrapper {
-	/* display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center; */
 }
 
 .view-review--wrapper img {
@@ -245,8 +231,6 @@ footer {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
 		gap: 15px;
-		/* align-content: space-between; */
-		/* justify-content: center; */
 	}
 
 	.cards-list {

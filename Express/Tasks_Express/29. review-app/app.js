@@ -54,6 +54,30 @@ handlebars.registerHelper('or', function (a, b) {
 	return a || b;
 });
 
+handlebars.registerHelper('cutWords', function (text, count) {
+	if (!text) return '';
+	const words = text.split(' ');
+	return words.slice(0, count).join(' ') + (words.length > count ? '...' : '');
+});
+
+handlebars.registerHelper('dateConverter', function (dateObj) {
+	if (!dateObj) return '';
+	let date = new Date(dateObj);
+	let convertedDate = new Intl.DateTimeFormat('en-US', {
+		day: '2-digit',
+		month: 'short',
+		hour: '2-digit',
+		minute: '2-digit',
+		second: '2-digit'
+	}).format(date);
+	return convertedDate;
+});
+
+handlebars.registerHelper('increment', (value) => parseInt(value) + 1);
+handlebars.registerHelper('decrement', (value) => parseInt(value) - 1);
+handlebars.registerHelper('gt', (a, b) => a > b);
+handlebars.registerHelper('lt', (a, b) => a < b);
+
 const storage = multer.diskStorage({
 	destination: 'uploads/',
 	filename: (req, file, cb) => {
@@ -80,10 +104,6 @@ async function runDb() {
 	try {
 		await mongoClient.connect();
 		console.log('Connection with mongodb is successful');
-		// const db = mongoClient.db('reviewsApp');
-		// const collection = db.collection('products');
-		// const data = await collection.find().toArray();
-		// console.log(`Recieved Data: ${JSON.stringify(data)}`);
 	} catch (e) {
 		console.log(`DB error: ${e.message}`);
 	}
@@ -103,8 +123,45 @@ runDb();
 Отзывы должны модерироваться через админку. Админ должен иметь возможность принять, отклонить или отредактировать отзыв.
 */
 
-app.get('/', (req, res) => {
-	res.render('index', { title: 'Main Page' });
+app.get('/', async (req, res) => {
+	let message = req.query.message;
+	const page = parseInt(req.query.page) || 1;
+	const limit = 8;
+	const skip = (page - 1) * limit;
+
+	await mongoClient.connect();
+	const db = mongoClient.db('reviewsApp');
+	const products = await db.collection('products').find().toArray();
+	const reviews = await db
+		.collection('reviews')
+		.find({ reviewStatus: 'approved' })
+		.skip(skip)
+		.limit(limit)
+		.toArray();
+
+	// { productId: { name, photo } }
+	const productMap = {};
+	(await products).forEach((product) => {
+		productMap[product._id] = product;
+	});
+	const dataWithImg = reviews.map((review) => {
+		const product = productMap[review.productId.toString()];
+		return {
+			...review,
+			productPhoto: product?.image || null
+		};
+	});
+
+	const totalCount = await db.collection('reviews').countDocuments({ reviewStatus: 'approved' });
+	const totalPages = Math.ceil(totalCount / limit);
+
+	res.render('index', {
+		title: 'Main Page',
+		data: dataWithImg,
+		message,
+		page,
+		totalPages
+	});
 });
 
 app.get('/leave-a-review/', async (req, res) => {
@@ -123,10 +180,6 @@ app.post('/leave-a-review/', async (req, res) => {
 			return res.status(400).render('create', { error: err.message });
 		}
 
-		if (!req.file) {
-			return res.status(400).render('create', { error: 'Only images are allowed!' });
-		}
-
 		try {
 			await mongoClient.connect();
 			const db = mongoClient.db('reviewsApp');
@@ -138,19 +191,17 @@ app.post('/leave-a-review/', async (req, res) => {
 				author: req.body.author,
 				productId: req.body.select,
 				productName: productName.name,
+				productPhoto: productName.image,
 				reviewType: req.body.reviewType,
 				advantages: req.body.pros,
 				disadvantages: req.body.cons,
 				comments: req.body.text,
-				photo: req.file.path,
+				photo: req.file?.path || null,
 				createdAt: new Date(),
 				reviewStatus: 'pending'
 			};
-			console.log(`review ${JSON.stringify(review)}`);
 			await collection.insertOne(review);
-			// const data = await collection.find().toArray();
-			// res.render('create', { title: 'Leave your review', data });
-			res.redirect(302, '/');
+			res.redirect(302, '/?message=Your review was send for moderation');
 		} catch (e) {
 			console.log(`DB error: ${e.message}`);
 		}
@@ -163,11 +214,6 @@ app.get('/review/:id', async (req, res) => {
 	const db = mongoClient.db('reviewsApp');
 	const collection = db.collection('reviews');
 	const data = await collection.find({ _id: new ObjectId(id) }).toArray();
-	console.log(`Recieved review data: ${data}`);
-	console.log(data);
-	// if (!data) {
-	// 	return res.send('not found').redirect(302, '/');
-	// }
 	res.render('review', { title: 'View a review', data });
 });
 
@@ -193,8 +239,8 @@ app.post('/login', async (req, res) => {
 			.status(401)
 			.render('login', { error: 'Invalid credentials', title: 'Login page: error' });
 	}
-	console.log('Stored hash:', user.password);
-
+	console.log('Пароль из формы:', req.body.password);
+	console.log('Хеш из базы:', user.password);
 	const match = await bcrypt.compare(password, user.password);
 
 	if (!match) {
@@ -203,7 +249,6 @@ app.post('/login', async (req, res) => {
 			.status(401)
 			.render('login', { error: 'Invalid credentials', title: 'Login page: error' });
 	}
-
 	req.session.userId = user._id;
 	res.redirect('/admin');
 });
@@ -219,13 +264,9 @@ function isAuthenticated(req, res, next) {
 }
 
 app.get('/admin', isAuthenticated, async (req, res) => {
-	// res.send('authorised user' + req.session.userId);
-	console.log('Проверка сессии в админке:', req.session);
-	console.log('UserId:', req.session.userId);
 	const db = mongoClient.db('reviewsApp');
 	const collection = db.collection('reviews');
 	let data = await collection.find({ reviewStatus: 'pending' }).toArray();
-	console.log(data);
 	res.render('admin', { data, title: 'Admin page' });
 });
 
@@ -237,7 +278,6 @@ app.get('/admin/review/:id', async (req, res) => {
 		{ _id: new ObjectId(id) },
 		{ $set: { reviewStatus: 'approved' } }
 	);
-	console.log(`new changes: ${JSON.stringify(data)}`);
 	res.redirect('/admin');
 });
 
@@ -264,10 +304,6 @@ app.get('/admin/review/edit/:id', async (req, res) => {
 
 app.post('/admin/review/edit/:id', async (req, res) => {
 	const id = req.params.id;
-	console.log('Incoming edit data:', req.body);
-	console.log('Incoming request method:', req.method);
-	console.log('Incoming request headers:', req.headers);
-	console.log('Incoming request body:', req.body);
 	const db = mongoClient.db('reviewsApp');
 
 	const reviewsCollection = db.collection('reviews');
@@ -305,6 +341,6 @@ app.on('error', (e) => {
 	console.error(`Error - ${e}`);
 });
 
-app.listen(3000, () => {
-	console.log('Localhost:3000');
+app.listen(3005, () => {
+	console.log('Localhost:3005');
 });
