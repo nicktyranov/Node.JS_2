@@ -1,0 +1,28 @@
+<html lang='en'>
+	<head>
+		<meta charset='UTF-8' />
+		<meta name='viewport' content='width=device-width, initial-scale=1.0' />
+		<title>Survey Constructor | {{title}}</title>
+		<link rel='stylesheet' href='/styles.css' />
+
+	</head>
+	<body>
+		<h1 class='align-center'>Survey Constructor | {{title}}</h1>
+		<nav><ul class='menu-list'>
+				<li><a href='/'>Main page</a></li>
+				<li><a href='/create'>Creave a survey</a></li>
+				<li><a href='/list'>My surveys</a></li>
+				<li><a href='/login'>Login</a></li>
+			</ul></nav>
+		<div class='content'>
+			{{{body}}}
+		</div>
+
+		<footer>
+			<p class='align-center'>&copy; <span id='year'></span> Nikolai Tyranov</p>
+		</footer>
+		<script>
+			document.getElementById('year').textContent = new Date().getFullYear();
+		</script>
+	</body>
+</html>

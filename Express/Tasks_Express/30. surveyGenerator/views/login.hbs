@@ -1,0 +1,22 @@
+<form method='post' class='loginForm'>
+	{{#if notification}}
+		<div>
+			<p>{{notification}}</p>
+		</div>
+	{{/if}}
+	<p>
+		Use these credentials!<br />
+		username: admin
+		<br />
+		password: 123
+	</p>
+	<label for='username'>username</label>
+	<input type='text' name='username' placeholder='Enter your username' />
+
+	<label for='password'>password</label>
+	<input type='password' name='password' placeholder='Enter your password' />
+
+	<input type='submit' />
+
+	<p><a href='/login/registration'>create an account</a></p>
+</form>
