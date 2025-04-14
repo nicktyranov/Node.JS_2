@@ -22,6 +22,7 @@ app.set('views', './views');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
+
 app.use(
 	session({
 		secret: 'secret_key',
@@ -35,6 +36,10 @@ app.use(
 		}
 	})
 );
+app.use((req, res, next) => {
+	res.locals.user = req.session.user || null;
+	next();
+});
 
 let mongoClient = new mongodb.MongoClient('mongodb://localhost:27017');
 let db = mongoClient.db('surveyApp');
@@ -115,12 +120,17 @@ app.get('/', (req, res) => {
 });
 
 app.get('/login', (req, res) => {
+	if (req.query.notification) {
+		let notification = req.query.notification;
+		return res.render('login', { title: 'Login Page', notification });
+	}
+
 	res.render('login', { title: 'Login Page' });
 });
 
 app.post('/login', async (req, res) => {
 	await mongoClient.connect();
-	db
+	await db
 		.collection('users')
 		.findOne({ username: req.body.username })
 		.then((user) => {
@@ -130,7 +140,8 @@ app.post('/login', async (req, res) => {
 					console.log('pass matched');
 					res.redirect('/');
 				} else {
-					res.redirect('/login');
+					console.log('wrong pass');
+					res.redirect('/login?notification=Username/password incorrect');
 				}
 			});
 		});
@@ -147,6 +158,19 @@ app.post('/login/registration', async (req, res) => {
 		password: await bcrypt.hash(req.body.password, 10)
 	});
 	res.redirect('/login');
+});
+
+app.get('/create', (req, res) => {
+	if (!req.session.user) {
+		return res.redirect('/login?notification=must be authorized');
+	}
+	res.render('create', { title: 'Creave a survey' });
+});
+
+app.get('/logout', (req, res) => {
+	req.session.destroy(() => {
+		res.redirect('/login');
+	});
 });
 
 app.listen(3008, () => {
