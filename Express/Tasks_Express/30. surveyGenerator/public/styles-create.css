@@ -1,0 +1,22 @@
+.form-survey {
+	display: flex;
+	flex-direction: column;
+}
+
+.survey-answers {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 10px; /* отступы между элементами */
+	flex-wrap: wrap; /* перенос на новую строку, если элементов много */
+}
+
+.answer-option {
+	display: flex;
+	align-items: center;
+	gap: 5px; /* отступ между радио-кнопкой и её подписью */
+}
+
+.add-answer {
+	cursor: pointer;
+}
