@@ -1,0 +1,18 @@
+<div class='surveyList'>
+
+	{{#if data}}
+		{{#each data}}
+
+			<div class='surveyCard'>
+				name:
+				{{title}}
+				<br />
+				description:
+				{{description}}
+			</div>
+
+		{{/each}}
+	{{else}}
+		<p>no surveys</p>
+	{{/if}}
+</div>

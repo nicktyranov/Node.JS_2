@@ -105,6 +105,18 @@ footer {
 	border: 1px solid sandybrown;
 }
 
+.surveyList {
+	display: grid;
+	grid-template-columns: repeat(1, 1fr);
+	gap: 5px;
+}
+
+.surveyCard {
+	padding: 5px 15px;
+	border: 1px dotted black;
+}
+
+/* 
 .reviews-list {
 	margin: 20px 0;
 	display: grid;
@@ -137,12 +149,12 @@ footer {
 	display: flex;
 	gap: 15px;
 	justify-content: center;
-}
+} */
 
 .align-center {
 	text-align: center;
 }
-
+/* 
 .card {
 	padding: 10px;
 	display: flex;
@@ -237,4 +249,4 @@ footer {
 		grid-template-columns: repeat(2, 1fr);
 		gap: 5px;
 	}
-}
+} */

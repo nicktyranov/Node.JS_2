@@ -3,20 +3,46 @@
 	flex-direction: column;
 }
 
+.survey {
+	margin: 5px 0;
+}
+
+.question {
+	margin-top: 5px;
+	padding: 10px 0;
+	border-bottom: 1px solid black;
+}
+
+.question:first-child {
+	margin-top: 5px;
+	padding: 10px 0;
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+}
+
+.question-input {
+	width: 100%;
+}
+
 .survey-answers {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 10px; /* отступы между элементами */
-	flex-wrap: wrap; /* перенос на новую строку, если элементов много */
+	gap: 10px;
+	flex-wrap: wrap;
 }
 
 .answer-option {
 	display: flex;
 	align-items: center;
-	gap: 5px; /* отступ между радио-кнопкой и её подписью */
+	gap: 5px;
 }
 
 .add-answer {
 	cursor: pointer;
+}
+
+.controls-buttons {
+	display: flex;
+	justify-content: space-between;
 }

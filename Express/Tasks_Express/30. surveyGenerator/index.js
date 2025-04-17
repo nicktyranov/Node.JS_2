@@ -167,6 +167,45 @@ app.get('/create', (req, res) => {
 	res.render('create', { title: 'Creave a survey' });
 });
 
+app.post('/create', async (req, res) => {
+	if (!req.session.user) {
+		return res.redirect('/login?notification=must be authorized');
+	}
+	await mongoClient.connect();
+	console.log(req.body);
+	const questions = req.body.questions.map((q) => ({
+		_id: new ObjectId(),
+		text: q.text,
+		answers: q.answers.map((ans) => ({
+			text: ans.text,
+			votes: 0
+		}))
+	}));
+
+	const result = await db.collection('surveys').insertOne({
+		title: req.body.title,
+		description: req.body.description,
+		createdAt: new Date(),
+		questions: questions,
+		createdBy: req.session.user._id
+	});
+
+	await db
+		.collection('users')
+		.updateOne({ _id: req.session.user._id }, { $push: { surveys: result.insertedId } });
+
+	res.redirect('/');
+});
+
+app.get('/list', async (req, res) => {
+	if (!req.session.user) {
+		return res.redirect('/login?notification=must be authorized');
+	}
+	await mongoClient.connect();
+	const surveys = await db.collection('surveys').find({ createdBy: req.session.user._id }).toArray();
+	res.render('list', { title: 'User`s surveys', data: surveys });
+});
+
 app.get('/logout', (req, res) => {
 	req.session.destroy(() => {
 		res.redirect('/login');

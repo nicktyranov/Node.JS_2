@@ -1,33 +1,83 @@
-document.querySelector('.survey-answers').addEventListener('click', (e) => {
-	const label = e.target.closest('label');
-	if (!label) {
+console.log('script conneccted');
+document.querySelector('.add-answer').addEventListener('click', (e) => {
+	e.preventDefault();
+	const parent = document.querySelector('.survey-answers');
+
+	const newInput = document.createElement('div');
+	newInput.className = 'answer-option';
+
+	const currentAnswersCount = parent.querySelectorAll('.answer-option').length + 1;
+
+	newInput.innerHTML = `
+	<label>
+		<span class="answer-text">Answer ${currentAnswersCount}</span>
+		<input text="radio" name="answer-${currentAnswersCount}" value="" />
+	</label>
+	`;
+
+	parent.appendChild(newInput);
+});
+
+document.querySelector('.delete-answer').addEventListener('click', (e) => {
+	e.preventDefault();
+
+	const parent = document.querySelector('.survey-answers');
+	const currentAnswersCount = parent.querySelectorAll('.answer-option').length;
+	if (currentAnswersCount < 1) {
 		return;
 	}
+	const lastInput = parent.querySelector('.answer-option:last-child');
 
+	parent.removeChild(lastInput);
+});
+
+document.querySelector('#add-question').addEventListener('click', (e) => {
 	e.preventDefault();
-	const answerOption = label.closest('.answer-option');
-	const input = answerOption.querySelector('input[type="radio"]');
 
-	const editInput = document.createElement('input');
-	editInput.type = 'text';
-	editInput.value = label.textContent;
-	editInput.className = 'edit-input';
+	const survey = document.querySelector('.survey');
+	const questionCount = survey.querySelectorAll('.question').length;
 
-	answerOption.replaceChild(editInput, label);
-	editInput.focus();
+	const newQuestion = document.createElement('div');
+	newQuestion.className = 'question';
+	newQuestion.setAttribute('data-question-index', questionCount);
 
-	editInput.addEventListener('blur', () => {
-		const newText = editInput.value.trim() || 'New Answer';
+	newQuestion.innerHTML = `
+    <label>Question ${questionCount + 1}</label>
+    <input type='text' name='questions[${questionCount}][text]' class='question-input' required />
 
-		label.textContent = newText;
-		input.value = newText;
+    <h4>Answers</h4>
+    <div class='survey-answers' data-question-index="${questionCount}">
+      <div class='answer-option'>
+        <label>
+          <span class='answer-text'>Answer 1</span>
+          <input type='text' name='questions[${questionCount}][answers][0][text]' required />
+        </label>
+      </div>
 
-		answerOption.replaceChild(label, editInput);
-	});
+      <div class='answer-option'>
+        <label>
+          <span class='answer-text'>Answer 2</span>
+          <input type='text' name='questions[${questionCount}][answers][1][text]' required />
+        </label>
+      </div>
+    </div>
 
-	editInput.addEventListener('keydown', (event) => {
-		if (event.key === 'Enter') {
-			editInput.blur();
-		}
-	});
+    <div class='controls-buttons'>
+      <span class='add-answer' style='color: brown; cursor:pointer;'>+ Add answer</span>
+      <span class='delete-answer' style='color: brown; cursor:pointer;'>- Delete answer</span>
+    </div>
+  `;
+
+	survey.appendChild(newQuestion);
+});
+
+document.querySelector('#delete-question').addEventListener('click', (e) => {
+	e.preventDefault();
+
+	const survey = document.querySelector('.survey');
+	const questions = survey.querySelectorAll('.question');
+
+	if (questions.length > 1) {
+		survey.removeChild(questions[questions.length - 1]);
+	}
 });
