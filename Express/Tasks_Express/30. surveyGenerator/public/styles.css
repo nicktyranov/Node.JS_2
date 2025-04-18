@@ -114,6 +114,15 @@ footer {
 .surveyCard {
 	padding: 5px 15px;
 	border: 1px dotted black;
+	display: flex;
+	justify-content: space-between;
+}
+
+.viewSurvey--wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	padding: 0 10px;
 }
 
 /* 

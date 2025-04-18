@@ -5,6 +5,7 @@ import mongodb from 'mongodb';
 import { ObjectId } from 'mongodb';
 import bcrypt from 'bcrypt';
 import session from 'express-session';
+import { title } from 'process';
 
 const app = express();
 
@@ -204,6 +205,28 @@ app.get('/list', async (req, res) => {
 	await mongoClient.connect();
 	const surveys = await db.collection('surveys').find({ createdBy: req.session.user._id }).toArray();
 	res.render('list', { title: 'User`s surveys', data: surveys });
+});
+
+app.get('/survey/:id', async (req, res) => {
+	let id = req.params.id;
+	await mongoClient.connect();
+	const surveyData = await db.collection('surveys').findOne({ _id: new ObjectId(id) });
+
+	if (!surveyData) {
+		return res.status(404).send('Survey not found');
+	}
+	console.log(surveyData);
+	const question = surveyData.questions[0];
+	const labels = question.answers.map((a) => a.text);
+	const votes = question.answers.map((a) => a.votes);
+	res.render('viewSurvey', {
+		title: surveyData.title,
+		description: surveyData.description,
+		questionText: question.text,
+		data: [surveyData],
+		labels: JSON.stringify(labels),
+		votes: JSON.stringify(votes)
+	});
 });
 
 app.get('/logout', (req, res) => {

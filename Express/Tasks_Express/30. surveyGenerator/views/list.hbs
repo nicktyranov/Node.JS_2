@@ -4,11 +4,14 @@
 		{{#each data}}
 
 			<div class='surveyCard'>
-				name:
-				{{title}}
-				<br />
-				description:
-				{{description}}
+				<p>
+					name:
+					{{title}}
+					<br />
+					description:
+					{{description}}
+				</p>
+				<button><a href='/survey/{{_id}}'>details</a></button>
 			</div>
 
 		{{/each}}
