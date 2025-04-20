@@ -36,11 +36,13 @@ footer {
 	justify-content: center;
 	align-items: center;
 	text-transform: capitalize;
+	text-wrap: nowrap;
 }
 
 .menu-list li:not(:last-child)::after {
 	content: '|';
-	margin: 0 10px;
+	margin: 0 5px;
+	text-wrap: nowrap;
 }
 
 .menu-list li:hover a {

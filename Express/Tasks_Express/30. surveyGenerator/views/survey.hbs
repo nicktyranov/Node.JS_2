@@ -1,0 +1,32 @@
+<div>
+	{{#if data}}
+		<h2>{{title}}</h2>
+		<p><strong>Description:</strong> {{description}}</p>
+
+		<form method="POST" action="/survey/{{data._id}}/vote">
+			{{#each data.questions}}
+				<div class="question-block">
+					<p>
+				
+						<strong> {{this.text}}</strong></p>
+
+					{{#each this.answers}}
+						<label>
+							<input
+								type="radio"
+								name="question-{{@../index}}"
+								value="{{this.text}}"
+								required
+							/>
+							{{this.text}}
+						</label><br />
+					{{/each}}
+				</div>
+			{{/each}}
+
+			<button type="submit">Submit</button>
+		</form>
+	{{else}}
+		<p>Error: survey not found.</p>
+	{{/if}}
+</div>

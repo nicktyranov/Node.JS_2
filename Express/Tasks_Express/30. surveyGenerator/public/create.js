@@ -1,35 +1,74 @@
 console.log('script conneccted');
-document.querySelector('.add-answer').addEventListener('click', (e) => {
-	e.preventDefault();
-	const parent = document.querySelector('.survey-answers');
 
-	const newInput = document.createElement('div');
-	newInput.className = 'answer-option';
+const surveyContainer = document.querySelector('.survey');
 
-	const currentAnswersCount = parent.querySelectorAll('.answer-option').length + 1;
+surveyContainer.addEventListener('click', (e) => {
+	if (e.target.classList.contains('add-answer')) {
+		e.preventDefault();
 
-	newInput.innerHTML = `
-	<label>
-		<span class="answer-text">Answer ${currentAnswersCount}</span>
-		<input text="radio" name="answer-${currentAnswersCount}" value="" />
-	</label>
-	`;
+		const questionBlock = e.target.closest('.question');
+		const questionIndex = questionBlock.dataset.questionIndex;
+		const answersContainer = questionBlock.querySelector('.survey-answers');
+		const currentAnswersCount = answersContainer.querySelectorAll('.answer-option').length;
 
-	parent.appendChild(newInput);
-});
+		const newInput = document.createElement('div');
+		newInput.className = 'answer-option';
 
-document.querySelector('.delete-answer').addEventListener('click', (e) => {
-	e.preventDefault();
+		newInput.innerHTML = `
+      <label>
+        <span class="answer-text">Answer ${currentAnswersCount + 1}</span>
+        <input type="text" name="questions[${questionIndex}][answers][${currentAnswersCount}][text]" required />
+      </label>
+    `;
 
-	const parent = document.querySelector('.survey-answers');
-	const currentAnswersCount = parent.querySelectorAll('.answer-option').length;
-	if (currentAnswersCount < 1) {
-		return;
+		answersContainer.appendChild(newInput);
 	}
-	const lastInput = parent.querySelector('.answer-option:last-child');
 
-	parent.removeChild(lastInput);
+	if (e.target.classList.contains('delete-answer')) {
+		e.preventDefault();
+
+		const questionBlock = e.target.closest('.question');
+		const answersContainer = questionBlock.querySelector('.survey-answers');
+		const currentAnswers = answersContainer.querySelectorAll('.answer-option');
+
+		if (currentAnswers.length > 2) {
+			answersContainer.removeChild(currentAnswers[currentAnswers.length - 1]);
+		}
+	}
 });
+
+// console.log('script conneccted');
+// document.querySelector('.add-answer').addEventListener('click', (e) => {
+// 	e.preventDefault();
+// 	const parent = document.querySelector('.survey-answers');
+
+// 	const newInput = document.createElement('div');
+// 	newInput.className = 'answer-option';
+
+// 	const currentAnswersCount = parent.querySelectorAll('.answer-option').length + 1;
+
+// 	newInput.innerHTML = `
+// 	<label>
+// 		<span class="answer-text">Answer ${currentAnswersCount}</span>
+// 		<input text="radio" name="answer-${currentAnswersCount}" value="" />
+// 	</label>
+// 	`;
+
+// 	parent.appendChild(newInput);
+// });
+
+// document.querySelector('.delete-answer').addEventListener('click', (e) => {
+// 	e.preventDefault();
+
+// 	const parent = document.querySelector('.survey-answers');
+// 	const currentAnswersCount = parent.querySelectorAll('.answer-option').length;
+// 	if (currentAnswersCount < 1) {
+// 		return;
+// 	}
+// 	const lastInput = parent.querySelector('.answer-option:last-child');
+
+// 	parent.removeChild(lastInput);
+// });
 
 document.querySelector('#add-question').addEventListener('click', (e) => {
 	e.preventDefault();

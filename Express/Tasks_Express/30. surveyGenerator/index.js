@@ -42,6 +42,20 @@ app.use((req, res, next) => {
 	next();
 });
 
+handlebars.registerHelper('dateFix', (date) => {
+	return new Date(date).toLocaleString('en-US', {
+		day: 'numeric',
+		month: 'long',
+		year: 'numeric',
+		hour: 'numeric',
+		minute: 'numeric'
+	});
+});
+
+handlebars.registerHelper('inc', function (value) {
+	return Number(value) + 1;
+});
+
 let mongoClient = new mongodb.MongoClient('mongodb://localhost:27017');
 let db = mongoClient.db('surveyApp');
 async function runDb() {
@@ -216,17 +230,123 @@ app.get('/survey/:id', async (req, res) => {
 		return res.status(404).send('Survey not found');
 	}
 	console.log(surveyData);
-	const question = surveyData.questions[0];
-	const labels = question.answers.map((a) => a.text);
-	const votes = question.answers.map((a) => a.votes);
+
+	res.render('survey', {
+		title: surveyData.title,
+		description: surveyData.description,
+		data: surveyData
+	});
+});
+
+app.post('/survey/:id/vote', async (req, res) => {
+	let id = req.params.id;
+	await mongoClient.connect();
+	const surveyData = await db.collection('surveys').findOne({ _id: new ObjectId(id) });
+
+	if (!surveyData) {
+		return res.status(404).send('Survey not found');
+	}
+	console.log(surveyData);
+
+	const updatedQuestions = surveyData.questions.map((question, index) => {
+		const answerKey = `question-${index}`;
+		const selectedAnswerText = req.body[answerKey];
+
+		const updatedAnswers = question.answers.map((answer) => {
+			if (answer.text === selectedAnswerText) {
+				return { ...answer, votes: answer.votes + 1 };
+			}
+			return answer;
+		});
+
+		return {
+			...question,
+			answers: updatedAnswers
+		};
+	});
+
+	console.log(updatedQuestions);
+
+	await db
+		.collection('surveys')
+		.updateOne({ _id: new ObjectId(id) }, { $set: { questions: updatedQuestions } });
+
+	res.redirect(`/survey/results/${id}`);
+});
+
+app.get('/survey/results/:id', async (req, res) => {
+	let id = req.params.id;
+	await mongoClient.connect();
+	const surveyData = await db.collection('surveys').findOne({ _id: new ObjectId(id) });
+
+	if (!surveyData) {
+		return res.status(404).send('Survey not found');
+	}
+	console.log(surveyData);
+
+	const questionData = surveyData.questions.map((q) => ({
+		text: q.text,
+		labels: JSON.stringify(q.answers.map((a) => a.text)),
+		votes: JSON.stringify(q.answers.map((a) => a.votes))
+	}));
+
 	res.render('viewSurvey', {
 		title: surveyData.title,
 		description: surveyData.description,
-		questionText: question.text,
-		data: [surveyData],
-		labels: JSON.stringify(labels),
-		votes: JSON.stringify(votes)
+		data: surveyData,
+		questionData
 	});
+});
+
+app.get('/survey/:id/edit', async (req, res) => {
+	if (!req.session.user) {
+		return res.redirect('/login?notification=must be authorized');
+	}
+	let id = req.params.id;
+	await mongoClient.connect();
+	const surveyData = await db.collection('surveys').findOne({ _id: new ObjectId(id) });
+
+	res.render('create', { title: 'Edit a survey', data: surveyData });
+});
+
+app.post('/survey/:id/edit', async (req, res) => {
+	if (!req.session.user) {
+		return res.redirect('/login?notification=must be authorized');
+	}
+	let id = req.params.id;
+
+	await mongoClient.connect();
+	const existingSurvey = await db.collection('surveys').findOne({ _id: new ObjectId(id) });
+
+	const questions = req.body.questions.map((q, qIndex) => {
+		const existingQuestion = existingSurvey.questions[qIndex];
+
+		return {
+			_id: new ObjectId(q._id),
+			text: q.text,
+			answers: q.answers.map((ans, aIndex) => {
+				const oldVotes = existingQuestion?.answers?.[aIndex]?.votes || 0;
+				return {
+					text: ans.text,
+					votes: oldVotes
+				};
+			})
+		};
+	});
+
+	await db.collection('surveys').updateOne(
+		{ _id: new ObjectId(id) },
+		{
+			$set: {
+				title: req.body.title,
+				description: req.body.description,
+				createdAt: new Date(),
+				questions: questions,
+				createdBy: req.session.user._id
+			}
+		}
+	);
+	res.redirect('/list');
 });
 
 app.get('/logout', (req, res) => {

@@ -5,38 +5,71 @@
 		<span>description:
 			{{description}}</span>
 		<span>createdAt:
-			{{data.createdAt}}</span>
+			{{dateFix data.createdAt}}</span>
 		<h3>Questions</h3>
 
 		<div>
-			<ul>
-				<li>{{questionText}}?</li>
+			<ul>{{#each questionData}}
+					<li>{{text}}?
+						<canvas
+							id='myChart-{{@index}}'
+							width='600'
+							height='400'
+							data-labels='{{{labels}}}'
+							data-votes='{{{votes}}}'
+						>
+						</canvas>
+					</li>
+				{{/each}}
 			</ul>
 		</div>
 
 		<div>
-			<canvas
-				id='myChart'
-				width='600'
-				height='400'
-				data-labels='{{{labels}}}'
-				data-votes='{{{votes}}}'
-			>
-			</canvas>
+
 		</div>
 
 	{{else}}
 		<p>Error: try to refresh this page</p>
 	{{/if}}
+
 	<script src='https://cdn.jsdelivr.net/npm/chart.js' defer></script>
 
 	<script>
-		window.addEventListener('load', () => { const canvas = document.getElementById('myChart'); const
-		labels = JSON.parse(canvas.dataset.labels); const votes = JSON.parse(canvas.dataset.votes); const
-		ctx = canvas.getContext('2d'); new Chart(ctx, { type: 'bar', data: { labels: labels, datasets: [{
-		label: 'Answers', data: votes, backgroundColor: ['#e74c3c', '#3498db', '#f1c40f', '#2ecc71',
-		'#9b59b6'] }] }, options: { responsive: true, plugins: { legend: { position: 'top' }, title: {
-		display: true, text: 'Survey results' } } } }); });
-	</script>
+		window.addEventListener('load', () => {
+		document.querySelectorAll('canvas[id^="myChart-"]').forEach((canvas) => { 
+		const labels = JSON.parse(canvas.dataset.labels); 
+		const votes = JSON.parse(canvas.dataset.votes); 
+		console.log(votes)
+		const totalVotes = votes.reduce((acc, x) => acc + x, 0)
+		console.log(totalVotes)
 
+		const ctx = canvas.getContext('2d'); 
+		new Chart(ctx, { 
+		type: 'bar', 
+		data: { 
+			labels: labels, 
+			datasets: [ {
+			label: 'Answers', 
+			data: votes.map((el) => (el/totalVotes * 100).toFixed(1)), 
+			backgroundColor: ['#e74c3c', '#3498db', '#f1c40f', '#2ecc71',
+			'#9b59b6'] } ] 
+			}, 
+		options: { 
+			responsive: true, 
+			plugins: { legend: { position: 'top' }, 
+			title: { display: true, text: 'Survey results, %' } },
+			scales: {
+			y: {
+				min: 0,
+				max: 100,
+				ticks: {
+					stepSize: 10
+				}
+			}
+			}
+			} ,
+		
+			
+			}); }); });
+	</script>
 </div>
