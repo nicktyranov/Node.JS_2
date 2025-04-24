@@ -1,13 +1,15 @@
-
-
 <form class='form-survey' method='POST'>
-
 	<label for='title'>Name of this survey</label>
 	<input name='title' type='text' placeholder='Enter survey title' value="{{data.title}}" />
 
 	<label for='description'>Description of this survey</label>
 	<textarea name='description' placeholder='Enter survey description'
 	>{{data.description}}</textarea>
+
+	<div class='checkBox'>
+		<label for='private'>Private survey?</label>
+	<input name='private' type="checkbox" {{#if data.private}}checked{{/if}}/>
+	</div>
 
 	<div class='survey'>
 		<h3>Survey Questions</h3>

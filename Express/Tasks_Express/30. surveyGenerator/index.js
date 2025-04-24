@@ -62,6 +62,12 @@ handlebars.registerHelper('decrement', (value) => parseInt(value) - 1);
 handlebars.registerHelper('gt', (a, b) => a > b);
 handlebars.registerHelper('lt', (a, b) => a < b);
 
+handlebars.registerHelper('cutWords', function (text, count) {
+	if (!text) return '';
+	const words = text.split(' ');
+	return words.slice(0, count).join(' ') + (words.length > count ? '...' : '');
+});
+
 let mongoClient = new mongodb.MongoClient('mongodb://localhost:27017');
 let db = mongoClient.db('surveyApp');
 async function runDb() {
@@ -137,9 +143,12 @@ DATA STRUCTURE
 */
 
 app.get('/', async (req, res) => {
+	if (req.session.user) {
+		console.log(req.session.user);
+	}
 	await mongoClient.connect();
 	const page = parseInt(req.query.page) || 1;
-	const limit = 4;
+	const limit = 12;
 	const skip = (page - 1) * limit;
 	let data = await db
 		.collection('surveys')
@@ -197,11 +206,20 @@ app.post('/login', async (req, res) => {
 });
 
 app.get('/login/registration', (req, res) => {
+	if (req.query.notification) {
+		let notification = req.query.notification;
+		return res.render('registration', { title: 'Create an account: Error', notification });
+	}
 	res.render('registration', { title: 'Create an account' });
 });
 
 app.post('/login/registration', async (req, res) => {
 	await mongoClient.connect();
+	const isUserExist = await db.collection('users').findOne({ username: req.body.username });
+	if (isUserExist) {
+		return res.redirect('/login/registration?notification=User is already exist');
+	}
+
 	db.collection('users').insertOne({
 		username: req.body.username,
 		password: await bcrypt.hash(req.body.password, 10)
@@ -234,6 +252,7 @@ app.post('/create', async (req, res) => {
 	const result = await db.collection('surveys').insertOne({
 		title: req.body.title,
 		description: req.body.description,
+		private: req.body.private == 'on', //true OR undefined
 		createdAt: new Date(),
 		questions: questions,
 		createdBy: req.session.user._id
@@ -270,6 +289,26 @@ app.get('/survey/:id', async (req, res) => {
 		description: surveyData.description,
 		data: surveyData
 	});
+});
+
+app.get('/survey/:id/delete', async (req, res) => {
+	if (!req.session.user) {
+		return res.redirect('/login?notification=must be authorized');
+	}
+	let id = req.params.id;
+	await mongoClient.connect();
+	const surveyData = await db.collection('surveys').findOne({ _id: new ObjectId(id) });
+
+	if (!surveyData) {
+		return res.status(404).send('Survey not found');
+	}
+	if (surveyData.createdBy !== req.session.user._id) {
+		return res.redirect('/?notification=NO ACCESS: you are not the owner of this survey');
+	}
+
+	await db.collection('surveys').deleteOne({ _id: new ObjectId(id) });
+
+	res.redirect(`/?notification=survey with id: ${id} deleted`);
 });
 
 app.post('/survey/:id/vote', async (req, res) => {

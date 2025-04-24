@@ -2,9 +2,6 @@
 	<div class='notification align-center'>{{notification}}</div>
 
 {{/if}}
-{{! 
-Главная страница
-На главной странице сайта должен выводиться список из 10 отзывов и пагинация. Для каждого отзыва в тексте должны выводиться название товара, маленькое фото товара, автор отзыва, тип отзыва (негативный, позитивный), первые 50 слов отзыва и ссылка на страницу отзыва. }}
 
 <div class='cards-list'>
 	{{#if data}}
@@ -12,7 +9,7 @@
 			<div class='card'>
 				<p class='align-center'><span>{{title}}</span></p>
 
-				<p><span>Description: </span>{{description}}</p>
+				<p><span>Description: </span>{{cutWords description 30}}</p>
 				<a href='/survey/{{_id}}' class='link'>more...</a>
 
 			</div>
