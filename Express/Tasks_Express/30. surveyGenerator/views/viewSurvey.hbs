@@ -6,11 +6,12 @@
 			{{description}}</span>
 		<span>createdAt:
 			{{dateFix data.createdAt}}</span>
-		<h3>Questions</h3>
+		<h3 class="align-center">Questions</h3>
 
-		<div>
-			<ul>{{#each questionData}}
-					<li>{{text}}?
+		<div class="charts">
+			<ul>
+				{{#each questionData}}
+					<li class="align-center padding-10-0">{{text}}?
 						<canvas
 							id='myChart-{{@index}}'
 							width='600'

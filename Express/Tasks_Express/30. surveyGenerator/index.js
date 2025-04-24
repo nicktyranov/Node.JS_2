@@ -56,6 +56,12 @@ handlebars.registerHelper('inc', function (value) {
 	return Number(value) + 1;
 });
 
+handlebars.registerHelper('increment', (value) => parseInt(value) + 1);
+handlebars.registerHelper('decrement', (value) => parseInt(value) - 1);
+
+handlebars.registerHelper('gt', (a, b) => a > b);
+handlebars.registerHelper('lt', (a, b) => a < b);
+
 let mongoClient = new mongodb.MongoClient('mongodb://localhost:27017');
 let db = mongoClient.db('surveyApp');
 async function runDb() {
@@ -130,8 +136,36 @@ DATA STRUCTURE
 }
 */
 
-app.get('/', (req, res) => {
-	res.render('index', { title: 'Main Page' });
+app.get('/', async (req, res) => {
+	await mongoClient.connect();
+	const page = parseInt(req.query.page) || 1;
+	const limit = 4;
+	const skip = (page - 1) * limit;
+	let data = await db
+		.collection('surveys')
+		.find({ private: { $in: [false, null] } })
+		.skip(skip)
+		.limit(limit)
+		.toArray();
+	console.log(data);
+
+	const totalCount = await db
+		.collection('surveys')
+		.countDocuments({ private: { $in: [false, null] } });
+	const totalPages = Math.ceil(totalCount / limit);
+
+	if (req.query.notification) {
+		let notification = req.query.notification;
+		return res.render('index', {
+			title: 'Main Page',
+			notification,
+			data,
+			totalCount,
+			totalPages,
+			page
+		});
+	}
+	res.render('index', { title: 'Main Page', data, totalCount, totalPages, page });
 });
 
 app.get('/login', (req, res) => {

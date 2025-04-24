@@ -18,8 +18,24 @@ a {
 	color: black;
 }
 
+a:hover {
+	color: rgb(181, 181, 181);
+}
+
 footer {
 	padding: 10px;
+}
+
+.align-center {
+	text-align: center;
+}
+
+.align-right {
+	text-align: right;
+}
+
+.padding-10-0 {
+	padding: 10px 0;
 }
 
 .content {
@@ -77,6 +93,11 @@ footer {
 	font-weight: 700;
 }
 
+.charts {
+	max-width: 600px;
+	margin: 0 auto;
+}
+
 .loginForm {
 	display: flex;
 	flex-direction: column;
@@ -127,6 +148,35 @@ footer {
 	padding: 0 10px;
 }
 
+.card {
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	border: 1px solid black;
+	max-width: 250px;
+	width: 100%;
+	overflow: hidden;
+}
+
+.card span {
+	font-weight: 700;
+}
+
+.cards-list {
+	margin: 10px 0;
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	justify-items: center;
+	gap: 10px;
+}
+
+.link {
+	align-self: flex-end;
+	justify-items: flex-end;
+	margin-top: auto;
+}
+
 /* 
 .reviews-list {
 	margin: 20px 0;
@@ -162,9 +212,6 @@ footer {
 	justify-content: center;
 } */
 
-.align-center {
-	text-align: center;
-}
 /* 
 .card {
 	padding: 10px;
