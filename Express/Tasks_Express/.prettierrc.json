@@ -6,6 +6,13 @@
 	"semi": true,
 	"bracketSpacing": true,
 	"printWidth": 100,
-	"endOfLine": "auto"
-	
+	"endOfLine": "auto",
+	"overrides": [
+		{
+			"files": "*.hbs",
+			"options": {
+				"parser": "glimmer"
+			}
+		}
+	]
 }
