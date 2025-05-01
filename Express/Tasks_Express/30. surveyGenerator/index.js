@@ -5,7 +5,6 @@ import mongodb from 'mongodb';
 import { ObjectId } from 'mongodb';
 import bcrypt from 'bcrypt';
 import session from 'express-session';
-import { title } from 'process';
 
 const app = express();
 
@@ -42,6 +41,11 @@ app.use((req, res, next) => {
 	next();
 });
 
+app.use((req, res, next) => {
+	res.locals.currentPath = req.path;
+	next();
+});
+
 handlebars.registerHelper('dateFix', (date) => {
 	return new Date(date).toLocaleString('en-US', {
 		day: 'numeric',
@@ -61,6 +65,7 @@ handlebars.registerHelper('decrement', (value) => parseInt(value) - 1);
 
 handlebars.registerHelper('gt', (a, b) => a > b);
 handlebars.registerHelper('lt', (a, b) => a < b);
+handlebars.registerHelper('eq', (a, b) => a === b);
 
 handlebars.registerHelper('cutWords', function (text, count) {
 	if (!text) return '';

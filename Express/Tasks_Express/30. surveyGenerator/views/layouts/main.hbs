@@ -7,17 +7,19 @@
 
 	</head>
 	<body>
-		<h1 class='align-center'>Survey Constructor | {{title}}</h1>
-		<nav><ul class='menu-list'>
-				<li><a href='/'>Main page</a></li>
-				<li><a href='/create'>Create a survey</a></li>
-				<li><a href='/list'>My surveys</a></li>
+		<h1 class='align-center'>{{title}} | Survey Constructor</h1>
+		<nav>
+			<ul class='menu-list'>
+				<li><a href='/' class='{{#if (eq currentPath "/")}}active{{/if}}'>Main page</a></li>
+				<li><a href='/create' class='{{#if (eq currentPath "/create")}}active{{/if}}'>Create a survey</a></li>
+				<li><a href='/list' class='{{#if (eq currentPath "/list")}}active{{/if}}'>My surveys</a></li>
 				{{#if user}}
 					<li><a href='/logout'>Logout</a></li>
 				{{else}}
-					<li><a href='/login'>Login</a></li>
+					<li><a href='/login' class='{{#if (eq currentPath "/login")}}active{{/if}}'>Login</a></li>
 				{{/if}}
-			</ul></nav>
+			</ul>
+		</nav>
 		<div class='content'>
 			{{{body}}}
 		</div>
@@ -25,6 +27,7 @@
 		<footer>
 			<p class='align-center'>&copy; <span id='year'></span> Nikolai Tyranov</p>
 		</footer>
+
 		<script>
 			document.getElementById('year').textContent = new Date().getFullYear();
 		</script>

@@ -3,15 +3,12 @@
 		<h2>{{title}}</h2>
 		<p><strong>Description:</strong> {{description}}</p>
 
-		<form method="POST" action="/survey/{{data._id}}/vote">
+		<form method='POST' action='/survey/{{data._id}}/vote' class="form-survey">
 			{{#each data.questions}}
-				<div class="question-block">
-					<p>
-				
-						<strong> {{this.text}}</strong></p>
-
+				<div class='question-block margin-5'>
+					<p><strong> {{this.text}}</strong></p>
 					{{#each this.answers}}
-						<label>
+						<label class="cursorPointer">
 							<input
 								type="radio"
 								name="question-{{@../index}}"
@@ -19,12 +16,11 @@
 								required
 							/>
 							{{this.text}}
-						</label><br />
+						</label>
 					{{/each}}
 				</div>
 			{{/each}}
-
-			<button type="submit">Submit</button>
+			<button type='submit' class="padding-5 margin-5">Submit</button>
 		</form>
 	{{else}}
 		<p>Error: survey not found.</p>

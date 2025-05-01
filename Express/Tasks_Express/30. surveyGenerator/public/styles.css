@@ -18,12 +18,30 @@ a {
 	color: black;
 }
 
+a.active {
+	font-weight: bold;
+	color: rgb(44, 44, 44);
+	text-decoration: underline;
+}
+
 a:hover {
 	color: rgb(181, 181, 181);
 }
 
+button:hover {
+	cursor: pointer;
+}
+
 footer {
 	padding: 10px;
+}
+
+label > input {
+	cursor: pointer !important;
+}
+
+label:hover {
+	color: rgb(95, 95, 95);
 }
 
 .align-center {
@@ -38,12 +56,29 @@ footer {
 	padding: 10px 0;
 }
 
+.padding-5 {
+	padding: 5px;
+}
+
+.margin-5 {
+	margin: 5px 0;
+}
+
+.grey {
+	color: rgb(86, 86, 86);
+}
+
+.grey:hover {
+	color: rgb(0, 0, 0);
+}
+
+.cursorPointer {
+	cursor: pointer;
+}
+
 .content {
 	flex: 1;
 	padding: 10px;
-	/* max-width: 1280px;
-	width: 100%;
-	margin: 0 auto; */
 	justify-items: center;
 }
 
@@ -102,6 +137,12 @@ footer {
 
 .question-input {
 	width: 100%;
+}
+
+.question-block {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
 }
 
 .survey-answers {
@@ -218,9 +259,6 @@ footer {
 	align-self: flex-end;
 	justify-items: flex-end;
 	margin-top: auto;
-}
-
-@media (max-width: 870px) {
 }
 
 @media (max-width: 600px) {
